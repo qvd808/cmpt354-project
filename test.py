@@ -1,4 +1,4 @@
-from tools.functionality import Functionality, SEARCH_BUSINESS_FILTER, SEARCH_BUSINESS_ORDER
+from tools.functionality import Functionality, SEARCH_BUSINESS_FILTER, SEARCH_BUSINESS_ORDER, SEARCH_USER_YELP
 import pypyodbc
 from dotenv import dotenv_values
 
@@ -16,11 +16,17 @@ connection = pypyodbc.connect(connection_string)
 # Create a cursor to interact with the database
 cursor = connection.cursor()
 
-filter = SEARCH_BUSINESS_FILTER("MIN_STAR", 5)
-order = SEARCH_BUSINESS_ORDER("NAME")
-
 tool = Functionality(cursor)
-row = tool.search_business(filter, order)
+
+# #Search for business
+# filter = SEARCH_BUSINESS_FILTER("NAME", "The")
+# order = SEARCH_BUSINESS_ORDER("NAME")
+# row = tool.search_business(filter, order)
+
+#Search for user
+filter = SEARCH_USER_YELP('NAME', "Vi")
+row = tool.search_users(filter)
+
 for r in row:
     print(r)
 

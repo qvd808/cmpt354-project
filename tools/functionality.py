@@ -22,12 +22,50 @@ class SEARCH_BUSINESS_ORDER:
             case "NAME":
                 self.value = "name"
 
+class SEARCH_USER_YELP:
+    def __init__(self, variant, value):
+        allowed_variant = ['MIN_REVIEW_COUNT', "MIN_AVG_STAR", "NAME"]
+        if variant not in allowed_variant:
+            raise ValueError(f"The variant is not in {allowed_variant}")
+        
+        self.variant = variant
+
+        match self.variant:
+            case "MIN_REVIEW_COUNT":
+                if not (isinstance(value, float) or isinstance(value, int)):
+                    raise ValueError(f"MIN_REVIEW_COUNT must be float or int")
+            case "MIN_AVG_STAR":
+                if not (isinstance(value, float) or isinstance(value, int)):
+                    raise ValueError(f"MIN_REVIEW_COUNT must be float or int")
+            case "NAME":
+                if not isinstance(value, str):
+                    raise ValueError(f"MIN_REVIEW_COUNT must be str")
+                
+        self.value = value
+
+
 
 class Functionality:
     def __init__(self, cursor) -> None:
         self.cursor = cursor
+    
+    def login(self) -> None:
+        '''
+        Does it log the current user???
+        '''
+        
+        pass
 
     def search_business(self, filter:SEARCH_BUSINESS_FILTER, orders: SEARCH_BUSINESS_ORDER) -> str:
+        '''
+        Return the business the user search, 
+        if the result is empty the application should handle that
+
+        When search for the name do we search match anything after the string or do we 
+        search for a string that contains the specific str
+
+        '''
+        
         search = "SELECT * FROM business"
 
         search += " "
@@ -38,7 +76,7 @@ class Functionality:
             case "CITY":
                 search += f"WHERE business.city = {filter.value}"
             case "NAME":
-                search += f"WHERE business.name LIKE '%{filter.value}%'"
+                search += f"WHERE business.name LIKE '{filter.value}%'"
 
         search += " "
         
@@ -54,11 +92,24 @@ class Functionality:
 
         return self.cursor.fetchall()
 
-    def search_users():
-        pass
+    def search_users(self, filter:SEARCH_USER_YELP):
+        
+        search = "SELECT u.user_id, u.name, u.review_count, u.useful, u.funny, u.cool, u.average_stars, u.yelping_since FROM user_yelp u"
+        search += " "
+
+        match filter.variant:
+            case "MIN_REVIEW_COUNT":
+                search += f"WHERE u.review_count >= {filter.value}"
+            case "MIN_AVG_STAR":
+                search += f"WHERE u.average_stars >= {filter.value}"
+            case "NAME":
+                search += f"WHERE u.name like '{filter.value}%'"
+
+        self.cursor.execute(search)
+        return self.cursor.fetchall()
 
     def make_friend():
         pass
     
-    def review_business():
+    def review_business(business_id, stars):
         pass
