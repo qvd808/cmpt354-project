@@ -1,3 +1,4 @@
+from tools.functionality import Functionality, SEARCH_BUSINESS_FILTER, SEARCH_BUSINESS_ORDER
 import pypyodbc
 from dotenv import dotenv_values
 
@@ -15,13 +16,13 @@ connection = pypyodbc.connect(connection_string)
 # Create a cursor to interact with the database
 cursor = connection.cursor()
 
-# Example: execute a SQL query
-cursor.execute("SELECT * FROM business WHERE business.stars = 5 ORDER BY business.name")
-rows = cursor.fetchall()
+filter = SEARCH_BUSINESS_FILTER("MIN_STAR", 5)
+order = SEARCH_BUSINESS_ORDER("NAME")
 
-# Example: iterate through the results
-for row in rows:
-    print(row)
+tool = Functionality(cursor)
+row = tool.search_business(filter, order)
+for r in row:
+    print(r)
 
 # Close the cursor and connection when done
 cursor.close()
