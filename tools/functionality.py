@@ -49,12 +49,16 @@ class Functionality:
     def __init__(self, cursor) -> None:
         self.cursor = cursor
     
-    def login(self) -> None:
+    def login(self, user_id) -> None:
         '''
         Does it log the current user???
         '''
+        self.cursor.execute(f"SELECT * FROM user_yelp WHERE user_yelp.user_id = '{user_id}'")
+
+        if len(self.cursor.fetchall()) != 0:
+            return True
         
-        pass
+        return False
 
     def search_business(self, filter:SEARCH_BUSINESS_FILTER, orders: SEARCH_BUSINESS_ORDER) -> str:
         '''
