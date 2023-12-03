@@ -1,28 +1,46 @@
-import pypyodbc
-from dotenv import dotenv_values
+import sys
+from PyQt6.QtCore import Qt, QThread, pyqtSignal
+from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QPushButton, QWidget
 
-config = dotenv_values(".env")  # take environment variables from .env.
+class WorkerThread(QThread):
+    finished_signal = pyqtSignal()
 
-db_host = config['DB_HOST']
-db_name = config['DB_NAME']
-db_user = config['DB_USER']
-db_password = config['DB_PASSWORD']
+    def run(self):
+        # Simulate some time-consuming work
+        self.msleep(3000)
+        self.finished_signal.emit()
 
-connection_string = 'Driver={SQL Server};Server=' + db_host + ';Database=' + db_name + ';UID=' + db_user + ';PWD=' + db_password + ';'
-# Establish a connection
-connection = pypyodbc.connect(connection_string)
+class MyMainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
 
-# Create a cursor to interact with the database
-cursor = connection.cursor()
+        self.setWindowTitle("Thread Termination Example")
 
-# Example: execute a SQL query
-cursor.execute("SELECT * FROM business WHERE business.stars = 5 ORDER BY business.name")
-rows = cursor.fetchall()
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
 
-# Example: iterate through the results
-for row in rows:
-    print(row)
+        layout = QVBoxLayout(central_widget)
 
-# Close the cursor and connection when done
-cursor.close()
-connection.close()
+        self.terminate_button = QPushButton("Terminate Application", self)
+        self.terminate_button.clicked.connect(self.create_thread)
+        layout.addWidget(self.terminate_button)
+
+        self.worker_thread = None
+
+    def create_thread(self):
+        if self.worker_thread is None or not self.worker_thread.isRunning():
+            self.worker_thread = WorkerThread()
+            self.worker_thread.finished_signal.connect(self.terminate_application)
+            self.worker_thread.start()
+
+    def terminate_application(self):
+        print("Thread finished. Terminating application.")
+        app.quit()
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+
+    main_window = MyMainWindow()
+    main_window.show()
+
+    sys.exit(app.exec())

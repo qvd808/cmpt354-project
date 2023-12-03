@@ -1,3 +1,6 @@
+import pypyodbc
+from dotenv import dotenv_values
+
 class SEARCH_BUSINESS_FILTER:
     def __init__(self, variant, value):
         allowed_variant = ['MIN_STAR', "CITY", "NAME"]
@@ -44,15 +47,30 @@ class SEARCH_USER_YELP:
         self.value = value
 
 
-
 class Functionality:
-    def __init__(self, cursor) -> None:
+    def __init__(self) -> None:
+        self.cursor = None
+
+    def cursorCheck(self):
+        if self.cursor == None:
+            raise ValueError("Cursor have not exists yet")
+
+    def setCursor(self, cursor):
         self.cursor = cursor
-    
+
+    def init_connection(self, db_host, db_name, db_user, db_password):
+        
+        connection_string = 'Driver={SQL Server};Server=' + db_host + ';Database=' + db_name + ';UID=' + db_user + ';PWD=' + db_password + ';'
+        # Establish a connection
+        connection = pypyodbc.connect(connection_string)
+               
+        return connection.cursor()
+
     def login(self, user_id) -> None:
         '''
         Does it log the current user???
         '''
+        self.cursorCheck()
         self.cursor.execute(f"SELECT * FROM user_yelp WHERE user_yelp.user_id = '{user_id}'")
 
         if len(self.cursor.fetchall()) != 0:
@@ -69,6 +87,7 @@ class Functionality:
         search for a string that contains the specific str
 
         '''
+        self.cursorCheck()
         
         search = "SELECT * FROM business"
 
@@ -97,6 +116,7 @@ class Functionality:
         return self.cursor.fetchall()
 
     def search_users(self, filter:SEARCH_USER_YELP):
+        self.cursorCheck()
         
         search = "SELECT u.user_id, u.name, u.review_count, u.useful, u.funny, u.cool, u.average_stars, u.yelping_since FROM user_yelp u"
         search += " "
@@ -112,8 +132,23 @@ class Functionality:
         self.cursor.execute(search)
         return self.cursor.fetchall()
 
-    def make_friend():
-        pass
+    def make_friend(self, user1, user2) -> bool:
+        self.cursorCheck()
+
+        '''
+        Add two user to a friend ship table. Should check if the friend ship already exists
+        '''
+        self.cursor.execute(f"SELECT * FROM friendship WHERE user_id = '{user1}' AND friend = '{user2}'")
+        row = self.cursor.fetchall()
+
+        if len(row) != 0:
+            return False
+
+        self.cursor.execute(f"INSERT INTO friendship VALUES('{user1}', '{user2}')")
+        return True
+
     
-    def review_business(business_id, stars):
+    def review_business(self, business_id, stars):
+        self.cursorCheck()
+
         pass
