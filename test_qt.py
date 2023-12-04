@@ -2,7 +2,7 @@ from test_login_screen import Ui_LoginScreen
 from PyQt6 import QtWidgets, QtCore
 from tools.functionality import Functionality
 from tools.functionality import SEARCH_BUSINESS_FILTER, SEARCH_BUSINESS_ORDER, SEARCH_USER_YELP
-import pypyodbc
+import pypyodbc, sys
 from dotenv import dotenv_values
 from PyQt6.QtCore import QThread, pyqtSignal, QRect
 from PyQt6.QtWidgets import QMessageBox, QProgressBar,QVBoxLayout, QDialog, QWidget,QTableWidget, QTableWidgetItem,QHeaderView
@@ -123,6 +123,7 @@ class SearchBusinessScreen(QDialog):
             if column != 0:
                 return
             self.reviewBusiness(self.table.item(row, 0).text())
+
     def reviewBusiness(self, business_id):
         from PyQt6.QtWidgets import QInputDialog
         dialog = QInputDialog()
@@ -132,8 +133,7 @@ class SearchBusinessScreen(QDialog):
             value = dialog.textValue()
             try:
                 if 1 <= int(value) <= 5:
-                    print(business_id)
-                    # controller.review_business()
+                    controller.review_business(ui.current_user, business_id, value)
                 else:
                     error_message = QMessageBox()
                     error_message.setWindowTitle("Invalid input")
@@ -272,18 +272,21 @@ class WorkerThread(QThread):
         self.setCusor = setCursor
 
     def run(self):
-        # Simulate some time-consuming work
-        from dotenv import dotenv_values
-        config = dotenv_values(".env")  # take environment variables from .env.
 
         db_host="cypress.csil.sfu.ca"
         db_name = "qvd354"
         db_user = "s_qvd"
         db_password = "Ttmq6yAbH4FAnFgJ"
         try:
-            connection_string = 'Driver={SQL Server};Server=' + db_host + ';Database=' + db_name + ';UID=' + db_user + ';PWD=' + db_password + ';'
+
+            if sys.platform == 'darwin':
+                connection_string = 'Driver={ODBC Driver 17 for SQL Server};Server=' + db_host + ';Database=' + db_name + ';UID=' + db_user + ';PWD=' + db_password + ';'
+            else:
+                connection_string = 'Driver={SQL Server};Server=' + db_host + ';Database=' + db_name + ';UID=' + db_user + ';PWD=' + db_password + ';'
+
             connection = pypyodbc.connect(connection_string)
             self.setCusor(connection.cursor())
+            controller.setConnection(connection)
             self.finished_signal.emit(True)
         except Exception as e:
             self.finished_signal.emit(False)
@@ -337,6 +340,7 @@ class Application(Ui_LoginScreen):
         self.setupUi(Window)
         self.controller = controller
         self.pushButton.clicked.connect(self.sign_in_function)
+        self.current_user = None
 
         self.screens = QtWidgets.QStackedWidget()
 
@@ -350,9 +354,11 @@ class Application(Ui_LoginScreen):
     def sign_in_function(self):
         user_id = self.textEdit.toPlainText()
         if self.controller.login(user_id):
-            print("Login successfully")
+            self.current_user = user_id
             self.textEdit.setText("")
+            print("Login successfully")
             widget.setCurrentWidget(search_screen)
+
         else:
             self.textEdit.setText("")
             message_box = QMessageBox()

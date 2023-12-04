@@ -50,6 +50,7 @@ class SEARCH_USER_YELP:
 class Functionality:
     def __init__(self) -> None:
         self.cursor = None
+        self.connection = None
 
     def cursorCheck(self):
         if self.cursor == None:
@@ -57,6 +58,9 @@ class Functionality:
 
     def setCursor(self, cursor):
         self.cursor = cursor
+    
+    def setConnection(self, connection):
+        self.connection = connection
 
     def init_connection(self, db_host, db_name, db_user, db_password):
         
@@ -150,7 +154,17 @@ class Functionality:
     
     def review_business(self,user_id, business_id, star):
         self.cursorCheck()
-        command = f"INSERT INTO reviews (user_id, business_id, stars) \
-                   VALUES ('{user_id}', '{business_id}', {star});"
+        import string
+        import random
+        
+        # initializing size of string
+        N = 22
+        
+        # using random.choices()
+        # generating random strings
+        random_id = ''.join(random.choices(string.ascii_lowercase +
+                                    string.digits, k=N))
+        command = f"INSERT INTO review (review_id, user_id, business_id, stars) VALUES ('{random_id}', '{user_id}', '{business_id}', {star});"
         self.cursor.execute(command)
+        self.connection.commit()
         
