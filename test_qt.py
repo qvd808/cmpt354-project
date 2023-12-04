@@ -124,9 +124,15 @@ class SearchBusinessScreen(QDialog):
                 return
             self.reviewBusiness()
     def reviewBusiness(self):
-        
-        print("Activated")
-
+        from PyQt6.QtWidgets import QInputDialog
+        dialog = QInputDialog()
+        dialog.setLabelText("Enter your rating")
+        dialog.InputMode(QInputDialog.IntInput)
+        result = dialog.exec()
+        if result:
+            print(dialog.textValue())
+        else:
+            print("Cancle")
 
 class SearchUserScreen(QDialog):
     def __init__(self):
