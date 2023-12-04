@@ -18,22 +18,22 @@ try:
 except pypyodbc.DatabaseError:
     print("None")
     
-# # Create a cursor to interact with the database
-# cursor = connection.cursor()
+# Create a cursor to interact with the database
+cursor = connection.cursor()
 
-# tool = Functionality(cursor)
-
+tool = Functionality()
+tool.setCursor(cursor)
 # # #Search for business
 # # filter = SEARCH_BUSINESS_FILTER("NAME", "The")
 # # order = SEARCH_BUSINESS_ORDER("NAME")
 # # row = tool.search_business(filter, order)
 
-# # #Search for user
-# # filter = SEARCH_USER_YELP('NAME', "Vi")
-# # row = tool.search_users(filter)
+#Search for user
+filter = SEARCH_USER_YELP('NAME', "Vi")
+row = tool.search_users(filter)
 
-# # for r in row:
-# #     print(r)
+for r in row:
+    print(r)
 
 # # id = 'zwtWUXjp4BT0JPeMP9GcWA'
 # # if tool.login(id):
