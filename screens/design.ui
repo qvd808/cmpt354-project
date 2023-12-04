@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>LoginScreen</class>
+ <widget class="QWidget" name="LoginScreen">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>LoginScreen</string>
   </property>
   <property name="autoFillBackground">
    <bool>false</bool>
@@ -19,7 +19,15 @@
   <property name="styleSheet">
    <string notr="true">background: #F8F8F8; </string>
   </property>
-  <widget class="QWidget" name="centralwidget">
+  <widget class="QWidget" name="centralwidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1092</width>
+     <height>821</height>
+    </rect>
+   </property>
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
@@ -129,7 +137,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap>assets/butterfly_guy.jpg</pixmap>
+     <pixmap>../assets/butterfly_guy.jpg</pixmap>
     </property>
    </widget>
    <zorder>label_2</zorder>
@@ -147,10 +155,19 @@ li.checked::marker { content: &quot;\2612&quot;; }
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>3</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
  </widget>
  <resources>
-  <include location="application.qrc"/>
+  <include location="../application.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -89,7 +89,7 @@ class Functionality:
         '''
         self.cursorCheck()
         
-        search = "SELECT * FROM business"
+        search = "SELECT business.business_id, business.name, business.address, business.city, business.stars FROM business"
 
         search += " "
 
