@@ -148,7 +148,9 @@ class Functionality:
         return True
 
     
-    def review_business(self, business_id, stars):
+    def review_business(self,user_id, business_id, star):
         self.cursorCheck()
-
-        pass
+        command = f"INSERT INTO reviews (user_id, business_id, stars) \
+                   VALUES ('{user_id}', '{business_id}', {star});"
+        self.cursor.execute(command)
+        
