@@ -66,9 +66,10 @@ class Ui_Form(object):
 "border: 2px solid #665720;\n"
 "background: #AC9956;")
         self.pushButton_2.setObjectName("pushButton_2")
-        self.tableView = QtWidgets.QTableView(parent=Form)
-        self.tableView.setGeometry(QtCore.QRect(35, 231, 1031, 511))
-        self.tableView.setObjectName("tableView")
+        self.progressBar = QtWidgets.QProgressBar(parent=Form)
+        self.progressBar.setGeometry(QtCore.QRect(220, 280, 611, 51))
+        self.progressBar.setProperty("value", 24)
+        self.progressBar.setObjectName("progressBar")
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)

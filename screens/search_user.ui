@@ -13,6 +13,115 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <widget class="QComboBox" name="comboBox">
+   <property name="geometry">
+    <rect>
+     <x>740</x>
+     <y>70</y>
+     <width>151</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>24</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-radius: 30px;
+border: 3px solid #AAA;
+background: #D9D9D9;</string>
+   </property>
+   <item>
+    <property name="text">
+     <string>Filter By</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Minimum review count</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Minimum average stars</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Name</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QTextEdit" name="textEdit">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>70</y>
+     <width>661</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>24</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-radius: 30px;
+border: 3px solid #AAA;
+background: #D9D9D9;</string>
+   </property>
+   <property name="placeholderText">
+    <string>Enter a User ID</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_2">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>150</y>
+     <width>251</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>30</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-radius: 30px;
+border: 2px solid #665720;
+background: #AC9956;</string>
+   </property>
+   <property name="text">
+    <string>Back</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>150</y>
+     <width>251</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>30</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-radius: 30px;
+border: 2px solid #665720;
+background: #AC9956;</string>
+   </property>
+   <property name="text">
+    <string>Search</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

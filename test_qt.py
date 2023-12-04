@@ -6,6 +6,7 @@ import pypyodbc
 from dotenv import dotenv_values
 from PyQt6.QtCore import QThread, pyqtSignal, QRect
 from PyQt6.QtWidgets import QMessageBox, QProgressBar,QVBoxLayout, QDialog, QWidget,QTableWidget, QTableWidgetItem,QHeaderView
+from PyQt6.QtWidgets import QStyledItemDelegate, QComboBox, QMenu
 from PyQt6.uic import loadUi
 
 class SearchBusinessScreen(QDialog):
@@ -36,10 +37,17 @@ class SearchBusinessScreen(QDialog):
         match text:
             case "Minimum number of stars":    
                 self.current_filter = "MIN_STAR"
+                self.textEdit.setText("")
+                self.textEdit.setPlaceholderText("Please enter a number")
             case "City":    
                 self.current_filter = "CITY"
+                self.textEdit.setText("")
+                self.textEdit.setPlaceholderText("Please enter a city")
             case "Name":    
                 self.current_filter = "NAME"
+                self.textEdit.setText("")
+                self.textEdit.setPlaceholderText("Please enter a name")
+
             case _:
                 self.current_filter = None
 
@@ -52,12 +60,14 @@ class SearchBusinessScreen(QDialog):
     def search_business(self):
         if self.current_filter == None:
             self.show_message(
-                message="Please set the Filter for search business"
+                message="Please set the Filter for search business",
+                title="Missing Filter options"
             )
             return
         if self.current_order == None:
             self.show_message(
-                message="Please set the Order for search business"
+                message="Please set the Order for search business",
+                title="Missing Sort By options"
             )
             return
         
@@ -68,14 +78,15 @@ class SearchBusinessScreen(QDialog):
     
     def createLabel(self, row):
         self.table.setRowCount(len(row))
-        self.table.setColumnCount(len(row[0]))
+        self.table.setColumnCount(len(row[0]) + 1)
         self.table.setGeometry(QRect(35, 231, 1031, 511))
         self.table.setHorizontalHeaderLabels((
             "Business Id",
             "Name",
             "Address",
             "City",
-            "Number of stars"
+            "Number of stars",
+            "Review business"
         ))
         header = self.table.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
@@ -86,13 +97,127 @@ class SearchBusinessScreen(QDialog):
             for (row, value) in enumerate(item):
                 self.table.setItem(col, row, QTableWidgetItem(str(value)))
         self.table.show()
-        # self.addWidget(self.table)
+
+    def contextMenuEvent(self, event):
+        selected_indexes = self.table.selectedIndexes()
+        if not selected_indexes:
+            return
+        for index in selected_indexes:
+            row = index.row()
+            self.table.selectRow(row)
+
+        menu = QMenu(self)
+        action = menu.addAction("Review Business")
+        action.triggered.connect(self.executeFunction)
+        menu.exec(event.globalPos())
+
+    def executeFunction(self, row):
+        selected_indexes = self.table.selectedIndexes()
+        for index in selected_indexes:
+            row = index.row()
+            column = index.column()
+            if column != 0:
+                return
+            self.reviewBusiness()
+    def reviewBusiness(self):
+        
+        print("Activated")
+
 
 class SearchUserScreen(QDialog):
     def __init__(self):
         super().__init__()
         loadUi("./screens/search_user.ui", self)
+        self.current_filter = None
+        self.comboBox.currentTextChanged.connect(self.setFilter)
 
+        self.pushButton.clicked.connect(self.search_business)
+        self.table = QTableWidget(self)
+        self.table.hide()
+
+    def setFilter(self, text):
+        match text:
+            case "Minimum review count":    
+                self.current_filter = "MIN_REVIEW_COUNT"
+                self.textEdit.setText("")
+                self.textEdit.setPlaceholderText("Please enter a number")
+            case "Minimum average stars":    
+                self.current_filter = "MIN_AVG_STAR"
+                self.textEdit.setText("")
+                self.textEdit.setPlaceholderText("Please enter a number")
+            case "Name":    
+                self.current_filter = "NAME"
+                self.textEdit.setText("")
+                self.textEdit.setPlaceholderText("Please enter a number")
+            case _:
+                self.current_filter = None
+
+    def show_message(self, message, title):
+        message_box = QMessageBox()
+        message_box.setWindowTitle(title)
+        message_box.setText(message)
+        message_box.exec()
+
+    def search_business(self):
+        if self.current_filter == None:
+            self.show_message(
+                message="Please set the Filter for search business",
+                title="Missing Filter options"
+            )
+            return
+        
+        filter = SEARCH_USER_YELP(variant=self.current_filter, value=self.textEdit.toPlainText())
+        row = controller.search_users(filter=filter)
+        self.createLabel(row)
+    
+    def createLabel(self, row):
+        self.table.setRowCount(len(row))
+        self.table.setColumnCount(len(row[0]))
+        self.table.setGeometry(QRect(35, 231, 1031, 511))
+        self.table.setHorizontalHeaderLabels((
+            "User Id",
+            "Name",
+            "Review count",
+            "Useful",
+            "Funny",
+            "Cool",
+            "Avg. stars",
+            "Date created"
+        ))
+        header = self.table.horizontalHeader()
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
+        header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)
+
+        for (col, item) in enumerate(row):
+            for (row, value) in enumerate(item):
+                self.table.setItem(col, row, QTableWidgetItem(str(value)))
+        self.table.show()
+
+    def contextMenuEvent(self, event):
+        selected_indexes = self.table.selectedIndexes()
+        if not selected_indexes:
+            return
+        for index in selected_indexes:
+            row = index.row()
+            self.table.selectRow(row)
+
+        menu = QMenu(self)
+        action = menu.addAction("Add Friend")
+        action.triggered.connect(self.executeFunction)
+        menu.exec(event.globalPos())
+
+    def executeFunction(self, row):
+        selected_indexes = self.table.selectedIndexes()
+        for index in selected_indexes:
+            row = index.row()
+            column = index.column()
+            if column != 0:
+                return
+            self.AddFriend()
+    def AddFriend(self):
+        
+        print("Activated")
 
 class SearchScreen(QDialog):
     def __init__(self):
@@ -118,10 +243,10 @@ class WorkerThread(QThread):
         from dotenv import dotenv_values
         config = dotenv_values(".env")  # take environment variables from .env.
 
-        db_host = config['DB_HOST']
-        db_name = config['DB_NAME']
-        db_user = config['DB_USER']
-        db_password = config['DB_PASSWORD']
+        db_host="cypress.csil.sfu.ca"
+        db_name = "qvd354"
+        db_user = "s_qvd"
+        db_password = "Ttmq6yAbH4FAnFgJ"
         try:
             connection_string = 'Driver={SQL Server};Server=' + db_host + ';Database=' + db_name + ';UID=' + db_user + ';PWD=' + db_password + ';'
             connection = pypyodbc.connect(connection_string)
@@ -139,8 +264,9 @@ class PopupQProgressDialog(QWidget):
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.bar)
         self.setLayout(self.layout)
-        self.setGeometry(300, 300, 550, 100)
-        self.setWindowTitle('Progress Bar')
+        self.setGeometry(1050, 300, 550, 100)
+        self.setWindowTitle('Connecting to qvd354 database')
+        self.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
         self.bar.setRange(0, 0)
         self.worker_thread = None
         self.main_app = main_app
@@ -151,7 +277,9 @@ class PopupQProgressDialog(QWidget):
             self.worker_thread.finished_signal.connect(self.handle_thread_result)
             self.show()
             self.worker_thread.start()  
-        
+
+
+
     def handle_thread_result(self, connection_successful):
         if connection_successful:
             print("Connection successful.")
@@ -169,12 +297,12 @@ class PopupQProgressDialog(QWidget):
             sys.exit()
 
 class Application(Ui_LoginScreen):
-    def __init__(self, Window: QtWidgets.QMainWindow, controller: Functionality, db_host, db_name, db_user, db_password) -> None:
+    def __init__(self, Window: QtWidgets.QMainWindow, controller: Functionality) -> None:
         super().__init__()
 
+        self.popup = PopupQProgressDialog(controller.setCursor, self)
         self.setupUi(Window)
         self.controller = controller
-        self.popup = PopupQProgressDialog(controller.setCursor, self)
         self.pushButton.clicked.connect(self.sign_in_function)
 
         self.screens = QtWidgets.QStackedWidget()
@@ -201,30 +329,16 @@ class Application(Ui_LoginScreen):
 
 if __name__ == "__main__":
     import sys
-    from dotenv import dotenv_values
-
-
-
-    config = dotenv_values(".env")  # take environment variables from .env.
-
-    db_host = config['DB_HOST']
-    db_name = config['DB_NAME']
-    db_user = config['DB_USER']
-    db_password = config['DB_PASSWORD']
 
     app = QtWidgets.QApplication(sys.argv)
     controller = Functionality()
 
-#initialize the app and screen
+    #initialize the app and screen
     MainWindow = QtWidgets.QMainWindow()
     widget = QtWidgets.QStackedWidget()
     ui = Application(
         MainWindow,
-        controller=controller,
-        db_name=db_name,
-        db_host=db_host,
-        db_password=db_password,
-        db_user=db_user
+        controller=controller
     )
     search_screen = SearchScreen()
     search_business_screen = SearchBusinessScreen()
