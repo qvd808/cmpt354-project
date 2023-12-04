@@ -122,17 +122,33 @@ class SearchBusinessScreen(QDialog):
             column = index.column()
             if column != 0:
                 return
-            self.reviewBusiness()
-    def reviewBusiness(self):
+            self.reviewBusiness(self.table.item(row, 0).text())
+    def reviewBusiness(self, business_id):
         from PyQt6.QtWidgets import QInputDialog
         dialog = QInputDialog()
         dialog.setLabelText("Enter your rating")
-        dialog.InputMode(QInputDialog.IntInput)
         result = dialog.exec()
         if result:
-            print(dialog.textValue())
+            value = dialog.textValue()
+            try:
+                if 1 <= int(value) <= 5:
+                    print(business_id)
+                    # controller.review_business()
+                else:
+                    error_message = QMessageBox()
+                    error_message.setWindowTitle("Invalid input")
+                    error_message.setText("Please enter integer from 1 to 5")
+                    error_message.exec()     
+            except ValueError:
+                error_message = QMessageBox()
+                error_message.setWindowTitle("Invalid input")
+                error_message.setText("Please enter integer from 1 to 5")
+                error_message.exec()     
         else:
+            # User pressed Cancel, handle it as needed (e.g., return a default value or raise an exception)
             print("Cancle")
+            return None
+    
 
 class SearchUserScreen(QDialog):
     def __init__(self):
