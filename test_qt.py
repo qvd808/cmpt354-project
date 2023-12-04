@@ -19,8 +19,12 @@ class SearchBusinessScreen(QDialog):
         self.comboBox_3.currentTextChanged.connect(self.setOrder)
 
         self.pushButton.clicked.connect(self.search_business)
+        self.pushButton_2.clicked.connect(self.backtoSearch)
         self.table = QTableWidget(self)
         self.table.hide()
+
+    def backtoSearch(self):
+        widget.setCurrentWidget(search_screen)
 
     def setOrder(self, text):
         match text:
@@ -132,8 +136,12 @@ class SearchUserScreen(QDialog):
         self.comboBox.currentTextChanged.connect(self.setFilter)
 
         self.pushButton.clicked.connect(self.search_business)
+        self.pushButton_2.clicked.connect(self.backtoSearch)
         self.table = QTableWidget(self)
         self.table.hide()
+
+    def backtoSearch(self):
+        widget.setCurrentWidget(search_screen)
 
     def setFilter(self, text):
         match text:
@@ -225,7 +233,10 @@ class SearchScreen(QDialog):
         loadUi("./screens/search_screen.ui", self)
         self.pushButton.clicked.connect(self.goToSearchBusinnesses)
         self.pushButton_2.clicked.connect(self.goToSearchUsers)
+        self.pushButton_3.clicked.connect(self.backToLogin)
     
+    def backToLogin(self):
+        widget.setCurrentWidget(ui.centralwidget)
     def goToSearchBusinnesses(self):
         widget.setCurrentWidget(search_business_screen)
     def goToSearchUsers(self):
@@ -318,6 +329,7 @@ class Application(Ui_LoginScreen):
         user_id = self.textEdit.toPlainText()
         if self.controller.login(user_id):
             print("Login successfully")
+            self.textEdit.setText("")
             widget.setCurrentWidget(search_screen)
         else:
             self.textEdit.setText("")
