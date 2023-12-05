@@ -3,7 +3,7 @@
 - This was built with [python version 3.10.13](https://www.python.org/downloads/release/python-31013/) 
 
 ## Require modules
-- [PyQt6](https://pypi.org/project/PyQt6/)
+- [PyQt5](https://pypi.org/project/PyQt5/)
 - [pypyodbc](https://github.com/pypyodbc/pypyodbc)
 
 ## To install all the requirement module please run

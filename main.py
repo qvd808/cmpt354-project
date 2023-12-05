@@ -1,10 +1,10 @@
-from PyQt6 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore
 import pypyodbc, sys
-from PyQt6.QtCore import QThread, pyqtSignal, QRect
-from PyQt6.QtWidgets import QMessageBox, QProgressBar,QVBoxLayout
-from PyQt6.QtWidgets import QMenu, QDialog, QWidget,QTableWidget, QTableWidgetItem,QHeaderView
-from PyQt6.uic import loadUi
-from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QThread, pyqtSignal, QRect
+from PyQt5.QtWidgets import QMessageBox, QProgressBar,QVBoxLayout
+from PyQt5.QtWidgets import QMenu, QDialog, QWidget,QTableWidget, QTableWidgetItem,QHeaderView
+from PyQt5.uic import loadUi
+from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_LoginScreen(object):
     def setupUi(self, LoginScreen):
         LoginScreen.setObjectName("LoginScreen")
@@ -181,7 +181,7 @@ class Functionality:
             case "CITY":
                 search += f"WHERE business.city = {filter.value}"
             case "NAME":
-                search += f"WHERE business.name LIKE '{filter.value}%'"
+                search += f"WHERE LOWER(business.name) LIKE '%{str(filter.value).lower()}%'"
 
         search += " "
         
@@ -209,7 +209,7 @@ class Functionality:
             case "MIN_AVG_STAR":
                 search += f"WHERE u.average_stars >= {filter.value}"
             case "NAME":
-                search += f"WHERE u.name like '{filter.value}%'"
+                search += f"WHERE LOWER(u.name) like '%{str(filter.value).lower()}%'"
 
         self.cursor.execute(search)
         return self.cursor.fetchall()
@@ -364,7 +364,7 @@ class SearchBusinessScreen(QDialog):
             self.reviewBusiness(self.table.item(row, 0).text())
 
     def reviewBusiness(self, business_id):
-        from PyQt6.QtWidgets import QInputDialog
+        from PyQt5.QtWidgets import QInputDialog
         dialog = QInputDialog()
         dialog.setLabelText("Enter your rating")
         result = dialog.exec()
@@ -417,7 +417,7 @@ class SearchUserScreen(QDialog):
             case "Name":    
                 self.current_filter = "NAME"
                 self.textEdit.setText("")
-                self.textEdit.setPlaceholderText("Please enter a number")
+                self.textEdit.setPlaceholderText("Please enter a name")
             case _:
                 self.current_filter = None
 
