@@ -6,6 +6,10 @@
 - [PyQt6](https://pypi.org/project/PyQt6/)
 - [pypyodbc](https://github.com/pypyodbc/pypyodbc)
 
+## To install all the requirement module please run
+```
+pip install -r requirement
+```
 ## To run the program, please open the command line, install the requirement module and run
 ```
 python main.py
