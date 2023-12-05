@@ -244,10 +244,13 @@ class SearchUserScreen(QDialog):
             column = index.column()
             if column != 0:
                 return
-            self.AddFriend()
-    def AddFriend(self):
-        
-        print("Activated")
+            self.AddFriend(self.table.item(row, 0).text())
+    def AddFriend(self, row):
+        if controller.make_friend(ui.current_user, row):
+            self.show_message(f"Successfully adding {ui.current_user} as your friend", "Success")
+        else:
+            self.show_message(f"{ui.current_user} is already your friend", "Failed")
+            
 
 class SearchScreen(QDialog):
     def __init__(self):

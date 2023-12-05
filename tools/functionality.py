@@ -149,6 +149,7 @@ class Functionality:
             return False
 
         self.cursor.execute(f"INSERT INTO friendship VALUES('{user1}', '{user2}')")
+        self.connection.commit()
         return True
 
     
