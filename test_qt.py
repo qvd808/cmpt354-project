@@ -365,6 +365,27 @@ class Application(Ui_LoginScreen):
         else:
             self.textEdit.setText("")
             message_box = QMessageBox()
+            import random
+            chance = random.randint(1, 5)
+            if chance == 1:
+                self.label.setText("Is this a valid User ID?")
+                self.label.setStyleSheet("color: #F00;\n"
+                "text-align: center;\n"
+                "font-family: Inter;\n"
+                "font-size: 64px;\n"
+                "font-style: normal;\n"
+                "font-weight: 400;\n"
+                "line-height: normal;")
+            else:
+                self.label.setText("Please enter your User ID")
+                self.label.setStyleSheet("color: #6D6F11;\n"
+                "text-align: center;\n"
+                "font-family: Inter;\n"
+                "font-size: 64px;\n"
+                "font-style: normal;\n"
+                "font-weight: 400;\n"
+                "line-height: normal;")    
+
             message_box.setWindowTitle('Invalid User ID!!')
             message_box.setText('The User Id you enter is invalid, please enter a different User ID')
             message_box.exec()
